@@ -3,6 +3,10 @@ from jira import JIRA
 import xmltodict
 import json
 
+import logging
+
+log = logging.getLogger(__name__)
+
 
 def jira_auth():
     """
@@ -29,10 +33,10 @@ def create_issue_dict(project, xml_report):
     solely on this documentation
     https://jira.readthedocs.io/en/master/examples.html#issues
     """
-    project_search = jira_auth().project(project)
-
     # Assuming this is just id from jira project
-    project_name = project_search.id
+    # project_search = jira_auth().project(project)
+    # project_name = project_search.id
+    project_name = project
     issues_list = []
     with open(xml_report) as file:
         report = json.loads(json.dumps(xmltodict.parse(file.read())))
@@ -49,4 +53,5 @@ def create_issue_dict(project, xml_report):
                 issue_dict['issuetype'] = issue_type_dict['name']
                 issues_list.append(issue_dict)
             continue
+    file.close()
     return issues_list
